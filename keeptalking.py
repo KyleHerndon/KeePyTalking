@@ -374,8 +374,59 @@ morse=['shell','halls','slick','trick','boxes','leaks','strobe','bistro','flick'
 def morseModule():
     return
 ###END MORSE###
+
+###MAZE###
+import maze
+def mazeModule():
+    midf = maze.build_m1_identifier()
+    kill = False
+    pos1, pos2 = None, None
+    found = midf.getMaze(pos1, pos2)
+    while (not kill) and found == None:
+        print("Enter 'x' to go back.")
+        print("for testing: (4, 0), (1, 2)")
+        maze.Maze().show(rulers=True)
+        r1 = input("Enter row of first indicator point: ").strip().replace(" ", "")
+        c1 = input("Enter column of first indicator point: ").strip().replace(" ", "")
+        r2 = input("Enter row of second indicator point: ").strip().replace(" ", "")
+        c2 = input("Enter column of second indicator point: ").strip().replace(" ", "")
+        if "x" in (r1, c1, r2, c2):
+            return
+        try:
+            r1, c1, r2, c2 = int(r1), int(c1), int(r2), int(c2)
+            pos1 = (r1,c1)
+            pos2 = (r2,c2)
+            pass
+        except Exception:
+            print("Could not parse indicator point positions.")
+            pass
+
+        found = midf.getMaze(pos1, pos2)
+        if not found:
+            print("Could not find maze with those indicators, try again or exit with 'x'.")
+
+    found.show()
+
+    startR = input("Enter row of start: ").strip().replace(" ", "")
+    startC = input("Enter column of start: ").strip().replace(" ", "")
+    endR = input("Enter row of end: ").strip().replace(" ", "")
+    endC = input("Enter column of end: ").strip().replace(" ", "")
+    if "x" in (startR, startC, endR, endC):
+        return
+    try:
+        startR, startC, endR, endC = int(startR), int(startC), int(endR), int(endC)
+        pos1 = (startR, startC)
+        pos2 = (endR, endC)
+        print(maze.getSolutionInstructions(found, (startR,startC), (endR,endC) ))
+        pass
+    except Exception:
+        print("Error with start/end positions.")
+        pass
+        return
+###END MAZE###
+
 while 1:
-    which=input("Modules: (w)ire, (b)utton, s(i)mon, (f)irst, (m)emory, (c)omplicated, (s)equence, (p)assword").strip().replace(" ", "").lower()
+    which=input("Modules: (w)ire, (b)utton, s(i)mon, (f)irst, (m)emory, (c)omplicated, (s)equence, (p)assword, ma(z)e. > ").strip().replace(" ", "").lower()
     if "w" in which:
         wireModule()
     elif 'b' in which:
@@ -392,8 +443,8 @@ while 1:
         sequenceModule()
     elif 'p' in which:
         passModule()
+    elif 'z' in which:
+        mazeModule()
     else:
         print("unrecognized command")
-
-
 
